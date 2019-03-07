@@ -89,9 +89,9 @@ export default {
     getList() {
       this.$axios
         .get(
-          `http://localhost:8899/admin/goods/getlist?pageIndex=${
-            this.pageIndex
-          }&pageSize=${this.pageSize}&searchvalue=${this.searchValue}`
+          `/admin/goods/getlist?pageIndex=${this.pageIndex}&pageSize=${
+            this.pageSize
+          }&searchvalue=${this.searchValue}`
         ) // 获取数据 然后执行
         .then(res => {
           // 获取返回的数据
@@ -109,18 +109,16 @@ export default {
     // 删除
     handleDelete(idsStr) {
       // console.log(idsStr);
-      this.$axios
-        .get(`http://localhost:8899/admin/goods/del/${idsStr}`)
-        .then(res => {
-          const { message, status } = res.data;
-          if (status === 0) {
-            this.$message({
-              message: message,
-              type: "success"
-            });
-            this.getList();
-          }
-        });
+      this.$axios.get(`/admin/goods/del/${idsStr}`).then(res => {
+        const { message, status } = res.data;
+        if (status === 0) {
+          this.$message({
+            message: message,
+            type: "success"
+          });
+          this.getList();
+        }
+      });
     },
     // 分页 每页几条
     handleSizeChange(val) {
@@ -150,7 +148,7 @@ export default {
 };
 </script>
 
-<style >
+<style scoped>
 .goods-img {
   width: 64px;
   height: 64px;

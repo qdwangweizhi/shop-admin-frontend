@@ -68,6 +68,8 @@ const router = new VueRouter({
 
 // 把axios绑定到vue实例的属性$axios
 Vue.prototype.$axios = axios;
+// 给axios给次请求自动加上域名
+axios.defaults.baseURL = 'http://localhost:8899';
 
 new Vue({
   router,

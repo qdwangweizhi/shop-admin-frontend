@@ -5,7 +5,18 @@
 </template>
 
 <script>
-export default {};
+export default {
+  mounted() {
+    this.$axios({
+      url: "/admin/account/islogin",
+      method: "get"
+    }).then(res => {
+      if (res.data.code === "nologin") {
+        this.$router.push("/login");
+      }
+    });
+  }
+};
 </script>
 
 <style>

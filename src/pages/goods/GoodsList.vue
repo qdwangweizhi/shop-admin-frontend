@@ -77,6 +77,7 @@ export default {
       totalCount: 0,
       // 保存要删除的商品
       idsStr: ""
+      //编辑商品的id、
     };
   },
   // 请求商品数据
@@ -96,15 +97,17 @@ export default {
         .then(res => {
           // 获取返回的数据
           const { data } = res;
-          console.log(data);
+          // console.log(data);
           // 表格的数据
           this.tableData = data.message;
           // 修改总条数
           this.totalCount = data.totalcount;
         });
     },
+    //编辑
     handleEdit(index, row) {
-      console.log(index, row);
+      // console.log(row.id);
+      this.$router.push(`goods-edit/${row.id}`);
     },
     // 删除
     handleDelete(idsStr) {

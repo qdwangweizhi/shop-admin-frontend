@@ -41,6 +41,7 @@
         :show-file-list="false"
         :on-success="handleAvatarSuccess"
         :before-upload="beforeAvatarUpload"
+        :file-list="form.imgList"
       >
         <img v-if="imageUrl" :src="imageUrl" class="avatar">
         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -70,13 +71,15 @@
         :on-preview="handlePictureCardPreview"
         :on-remove="handleRemove"
         :on-success="handleFileList"
+        :file-list="form.fileList"
       >
         <i class="el-icon-plus"></i>
       </el-upload>
-      <el-dialog :visible.sync="dialogVisible">
-        <img width="100%" :src="dialogImageUrl" alt>
-      </el-dialog>
     </el-form-item>
+
+    <el-dialog :visible.sync="dialogVisible">
+      <img width="100%" :src="dialogImageUrl" alt>
+    </el-dialog>
 
     <el-form-item label="内容摘要">
       <el-input type="textarea" v-model="form.zhaiyao"></el-input>
@@ -87,7 +90,7 @@
     </el-form-item>
 
     <el-form-item>
-      <el-button type="primary" @click="onSubmit">立即创建</el-button>
+      <el-button type="primary" @click="onSubmit">保存</el-button>
       <el-button @click="$router.back()">取消</el-button>
     </el-form-item>
   </el-form>
@@ -127,16 +130,38 @@ export default {
       // 头像图
       imageUrl: "",
       // 分类数据
-      categorys: []
+      categorys: [],
+      // 商品id
+      id: ""
     };
   },
   // 分类数据
   mounted() {
+    // 获取路由动态id
+    const { id } = this.$route.params;
+    this.id = id;
+    //请求商品数据
+    this.$axios({
+      url: `/admin/goods/getgoodsmodel/${this.id}`
+    }).then(res => {
+      // console.log(res.data);
+      this.form = res.data.message;
+      // 预览图片
+      this.imageUrl = res.data.message.imgList[0].url;
+      this.form.fileList = res.data.message.fileList.map(v => {
+        return {
+          ...v,
+          // 覆盖 v 对象里面的url
+          url: `http://localhost:8899` + v.shorturl
+        };
+      });
+    });
+
     this.$axios({
       method: "get",
       url: `/admin/category/getlist/goods`
     }).then(res => {
-      // console.log(res.data);
+      //   console.log(res.data);
       const { message } = res.data;
       // this.categorys = message;
       let options = [];
@@ -165,7 +190,7 @@ export default {
     onSubmit() {
       this.$axios({
         method: "post",
-        url: `/admin/goods/add/goods`,
+        url: `/admin/goods/edit/${this.id}`,
         data: this.form,
         // 处理跨域
         withCredentials: true
@@ -193,6 +218,7 @@ export default {
     handleFileList(res) {
       this.form.fileList.push(res);
     },
+
     beforeAvatarUpload(file) {
       const isLt2M = file.size / 1024 / 1024 < 2;
       if (!isLt2M) {
@@ -200,8 +226,18 @@ export default {
       }
       return isLt2M;
     },
+    // 移除选中的图片,fileList是删除后的数据
     handleRemove(file, fileList) {
-      console.log(file, fileList);
+      // console.log(fileList);
+      if (fileList.length === 0) {
+        this.$message({
+          type: "warning",
+          message: "至少保留一张图片"
+        });
+        return;
+      }
+
+      this.form.fileList = fileList;
     },
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url;

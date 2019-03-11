@@ -31,11 +31,11 @@ export default {
       this.$axios({
         url: "/admin/account/login",
         method: "POST",
-        data: this.formData
+        data: this.formData,
         // 处理跨域
-        // withCredentials: true
+        withCredentials: true
       }).then(res => {
-        console.log(res.data);
+        // console.log(res.data);
         const { status, message } = res.data;
         if (status == 1) {
           this.$message.error(message);

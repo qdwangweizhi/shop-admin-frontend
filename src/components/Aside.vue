@@ -12,6 +12,7 @@
         <i :class="item.icon"></i>
         <span slot="title">{{item.title}}</span>
       </template>
+
       <el-menu-item-group>
         <el-menu-item
           v-for="(subItem,subIndex) in item.group"
@@ -67,9 +68,13 @@ export default {
   flex: 1;
   border-right: none;
 }
-a {
+.el-menu-vertical-demo a {
   color: inherit;
   text-decoration: none;
+}
+/*把title隐藏*/
+.el-menu-item-group__title {
+  display: none;
 }
 </style>
     

@@ -17,9 +17,10 @@ import Admin from "./pages/Admin.vue"
 import CategoryList from "./pages/category/CategoryList.vue"
 import GoodaList from "./pages/goods/GoodsList.vue"
 import GoodsAdd from "./pages/goods/GoodsAdd.vue"
-
-
-
+import GoodsEdit from "./pages/goods/GoodsEdit.vue"
+import CategoryAdd from "./pages/category/CategoryAdd.vue"
+// 引入vuex的仓库
+import store from "./store";
 
 // 全局注册组件
 Vue.use(VueRouter);
@@ -52,13 +53,23 @@ const routes = [{
         meta: "新增列表"
       },
       {
+        path: "goods-edit/:id",
+        component: GoodsEdit,
+        meta: "编辑列表"
+      },
+
+      {
         path: "category-list",
         component: CategoryList,
+        meta: "栏目列表"
+      },
+      {
+        path: "category-add",
+        component: CategoryAdd,
         meta: "栏目列表"
       }
     ]
   },
-
 ]
 
 const router = new VueRouter({
@@ -73,5 +84,7 @@ axios.defaults.baseURL = 'http://localhost:8899';
 
 new Vue({
   router,
+  // 挂载store
+  store,
   render: h => h(App),
 }).$mount('#app')

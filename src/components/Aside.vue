@@ -39,7 +39,7 @@ export default {
               path: "/admin/goods-list",
               title: "商品管理"
             },
-            { path: "/admin/category-list", title: "栏目管理" }
+            { path: "#", title: "栏目管理" }
           ]
         },
         {
